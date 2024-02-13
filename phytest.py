@@ -179,15 +179,15 @@ class Player(pygame.sprite.Sprite):
 
 
 
-ball = Rocket()
+rocket = Rocket()
 player = Player()
 running = True
 all_sprites = pygame.sprite.Group()
 balls = pygame.sprite.Group()
 players = pygame.sprite.Group()
-balls.add(ball)
+balls.add(rocket)
 players.add(player)
-all_sprites.add(ball)
+all_sprites.add(rocket)
 all_sprites.add(player)
 
 
@@ -227,7 +227,7 @@ while running:
     screen.fill((135, 206, 250))  
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
-    ball.update(pressed_keys)
+    rocket.update(pressed_keys)
     
     
     # pelaaja = pygame.sprite.spritecollideany(ball, players)
