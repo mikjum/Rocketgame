@@ -44,9 +44,9 @@ balls = pygame.sprite.Group()
 gravity = 1
 # Define a player object by extending pygame.sprite.Sprite
 # The surface drawn on the screen is now an attribute of 'player'
-class Ball(pygame.sprite.Sprite):
+class Rocket(pygame.sprite.Sprite):
     def __init__(self):
-        super(Ball, self).__init__()
+        super(Rocket, self).__init__()
         self.surf = pygame.image.load("arrow2.png").convert()
         self.surf.set_colorkey((0, 0, 0), RLEACCEL)
         self.originalsurf = self.surf
@@ -55,15 +55,13 @@ class Ball(pygame.sprite.Sprite):
         #Forces effecting to piece
         self.thrust = 0 #thrust of rotating motors
         self.kitka = 0.1 #Kitka, joka hidastaa kappaletta
-        self.gravity = (0, 0.1) #Vetovoima
+        self.gravity = [0, 0.1] #Vetovoima
         self.throttle = 0 #Keskimoottorin aiheuttama thrust
         self.spd = 0  #nopeuden magnitudi
-        self.spd_vect = (0,0) #Nopeusvektori (lasketaan kiihtyvyyksistä)
- #       self.direction = 30 #Suuntavektorin kulma
-        self.acc = (0, 0)  #Kokonaiskiihtyvyys
+        self.spd_vect = [0,0] #Nopeusvektori (lasketaan kiihtyvyyksistä)
+        self.friction = 0
+        self.acc = [0, 0]  #Kokonaiskiihtyvyys
     
- #       self.kimmokerroin = 0.9
-  #      self.kitka = 0.001
         self.inthegame = True
         self.angle = 0
         self.rot = 0
@@ -109,19 +107,22 @@ class Ball(pygame.sprite.Sprite):
            # self.spd += self.acc
             pressed = True
         if pressed_keys[K_UP]:
-            self.throttle = 0.1
+            self.throttle = 0.5
             pressed = True
         if pressed == False:
             self.rot = 0
             self.throttle = 0
             self.thrust = 0
-            self.spd -= self.kitka
-            if self.spd < 0:
-                self.spd = 0
+
             
-        if pressed == True:
-             self.spd = self.spd + self.throttle
-             self.spd_vect = self.calculate_movement(self.angle, self.spd, self.thrust, self.throttle)
+        self.acc = introduce_force(self.angle, self.thrust, self.throttle)
+        self.acc = introduce_external_force(self.acc, self.gravity)
+        self.spd = update_speed(self.spd_vect, self.acc)
+        print (introduce_friction(self.spd, self.friction))
+        
+       
+       
+
             
         # if self.spd > 10:
         #     self.spd = 10
@@ -138,21 +139,7 @@ class Ball(pygame.sprite.Sprite):
 
        
         
-     #   if self.rect.center[0]> SCREEN_WIDTH:
-      #      self.spdx = -self.spdx
-        
-      #  if self.rect.center[0] < 0:
-      #      self.inthegame = False
-            
-      #  if self.rect.center[1] > SCREEN_HEIGHT or self.rect.center[1] < 0:
-      #      self.spdy = -self.spdy
-           
-       # self.acc = self.calculate_accelerations(self.angle, self.thrust, self.throttle)
-        
-        
-       # self.spd = self.spd_vect[0]*self.spd_vect[0] + self.spd_vect[1]*self.spd_vect[1]
-        print(self.spd)
-        print (self.spd_vect)
+
         
         self.rect.move_ip(self.spd_vect)
        
@@ -192,7 +179,7 @@ class Player(pygame.sprite.Sprite):
 
 
 
-ball = Ball()
+ball = Rocket()
 player = Player()
 running = True
 all_sprites = pygame.sprite.Group()
@@ -202,6 +189,28 @@ balls.add(ball)
 players.add(player)
 all_sprites.add(ball)
 all_sprites.add(player)
+
+
+def introduce_force(angle, thrust, throttle):
+    total_force = thrust + throttle
+    acceleration = [-total_force*math.sin(math.radians(angle)), -total_force * math.cos(math.radians(angle)) ]
+    return acceleration
+
+def update_speed(speed, acceleration):
+    speed[0] += acceleration[0]
+    speed[1] += acceleration[1]
+    return speed
+
+def introduce_external_force(acceleration, force):
+    acceleration[0] +=force[0]
+    acceleration[1] += force[1]
+    return acceleration
+
+def introduce_friction(speed, friction):
+    direction_angle = math.degrees(math.atan2(speed[1], speed[0]))
+    friction_angle = direction_angle - 180
+    return direction_angle, friction_angle
+    
 
 # Main loop
 while running:
