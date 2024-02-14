@@ -47,8 +47,8 @@ gravity = 1
 class Rocket(pygame.sprite.Sprite):
     def __init__(self):
         super(Rocket, self).__init__()
-        self.surf = pygame.image.load("arrow2.png").convert()
-        self.surf.set_colorkey((0, 0, 0), RLEACCEL)
+        self.surf = pygame.image.load("rocket2.png").convert()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.originalsurf = self.surf
         self.rect = self.surf.get_rect(center = (500, 400))
         
@@ -65,6 +65,7 @@ class Rocket(pygame.sprite.Sprite):
         self.inthegame = True
         self.angle = 0
         self.rot = 0
+        self.onthefloor = False
    
         
         
@@ -107,7 +108,7 @@ class Rocket(pygame.sprite.Sprite):
            # self.spd += self.acc
             pressed = True
         if pressed_keys[K_UP]:
-            self.throttle = 0.5
+            self.throttle = 0.2
             pressed = True
         if pressed == False:
             self.rot = 0
@@ -117,8 +118,17 @@ class Rocket(pygame.sprite.Sprite):
             
         self.acc = introduce_force(self.angle, self.thrust, self.throttle)
         self.acc = introduce_external_force(self.acc, self.gravity)
+        if pygame.sprite.spritecollideany(self, floors) and self.spd_vect[1] > 0:
+            self.spd_vect[1] = 0
+        if pygame.sprite.spritecollideany(self, leftwall) and self.spd_vect[0] < 0:
+            self.spd_vect[0] = 0
+        if pygame.sprite.spritecollideany(self, rightwall) and self.spd_vect[0] > 0:
+            self.spd_vect[0] = 0
         self.spd = update_speed(self.spd_vect, self.acc)
-        print (introduce_friction(self.spd, self.friction))
+        if pygame.sprite.spritecollideany(self, ceiling) and self.spd_vect[1] < 0:
+            self.spd_vect[1] = 0
+        self.spd = update_speed(self.spd_vect, self.acc)
+        print(self.spd_vect)
         
        
        
@@ -139,14 +149,26 @@ class Rocket(pygame.sprite.Sprite):
 
        
         
-
+        # if pygame.sprite.spritecollideany(self, floors):
+        #     if self.onthefloor == False:
+        #         self.spd_vect[1] = 0
+        #         self.onthefloor = True
+        # else:
+        #     self.onthefloor = False
+            
         
         self.rect.move_ip(self.spd_vect)
        
         
-        
+class Wall(pygame.sprite.Sprite):
+    def __init__(self, centerpoint):
+        super(Wall, self).__init__()
+        self.surf = pygame.Surface((50,50))
+        self.surf.fill((255,255,255))
+        self.rect = self.surf.get_rect(center = centerpoint)
 
-
+    
+    
 # Define a player object by extending pygame.sprite.Sprite
 # The surface drawn on the screen is now an attribute of 'player'
 class Player(pygame.sprite.Sprite):
@@ -185,10 +207,53 @@ running = True
 all_sprites = pygame.sprite.Group()
 balls = pygame.sprite.Group()
 players = pygame.sprite.Group()
+leftwall = pygame.sprite.Group()
+rightwall = pygame.sprite.Group()
+floors = pygame.sprite.Group()
+ceiling = pygame.sprite.Group()
 balls.add(rocket)
 players.add(player)
 all_sprites.add(rocket)
 all_sprites.add(player)
+
+floor = []
+wall = []
+
+
+for i in range(25,1000, 50):
+
+    floortile = Wall((i, SCREEN_HEIGHT-25))
+    floor.append(floortile)
+    
+for tile in floor:
+    floors.add(tile)
+    all_sprites.add(tile)
+    
+for i in range(25,750, 50):
+
+    walltile = Wall((25, i))
+    wall.append(walltile)
+    
+for tile in wall:
+    leftwall.add(tile)
+    all_sprites.add(tile)
+    
+for i in range(25,750, 50):
+
+    walltile = Wall((SCREEN_WIDTH-25, i))
+    rightwall.add(walltile)
+    all_sprites.add(walltile)
+    
+for i in range(25,1000, 50):
+
+    walltile = Wall((i, 25))
+    ceiling.add(walltile)
+    all_sprites.add(walltile)
+    
+
+    
+
+
 
 
 def introduce_force(angle, thrust, throttle):
