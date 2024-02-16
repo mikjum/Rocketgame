@@ -100,7 +100,7 @@ goals.add(goal)
 floor = []
 wall = []
 file = open('levels.txt')
-spoint = generate_level(file,1)
+spoint = generate_level(file,2)
 rocket = gameobjects.Rocket(spoint)
 all_sprites.add(rocket)
 bg = gameobjects.Background("background.png", [0,0])
