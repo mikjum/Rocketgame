@@ -1,0 +1,31 @@
+CCCCCCCCCCCCCCCCCCCC
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L   S         GGGG R
+FFFFFFFFFFFFFFFFFFFF
+CCCCCCCCCCCCCCCCCCCC
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L                  R
+L       RL         R
+L       RL         R
+L       RL         R
+L   S   RL   GGGG  R
+FFFFFFFFFFFFFFFFFFFF
+
