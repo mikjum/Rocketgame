@@ -69,6 +69,11 @@ def generate_level(file, levelnumber):
                 tile = gameobjects.Wall((xlocation, ylocation))
                 floors.add(tile)
                 all_sprites.add(tile)
+            if marker == 'G':
+                tile = gameobjects.Wall((xlocation, ylocation))
+                floors.add(tile)
+                goals.add(tile)
+                all_sprites.add(tile)
             if marker == 'S':
                 startingpoint = (xlocation, ylocation-50)
             xlocation += 50
@@ -97,71 +102,88 @@ floors.add(goal)
 goals.add(goal)
 #all_sprites.add(player)
 
-floor = []
-wall = []
-file = open('levels.txt')
-spoint = generate_level(file,2)
-rocket = gameobjects.Rocket(spoint)
-all_sprites.add(rocket)
-bg = gameobjects.Background("background.png", [0,0])
+lives = 3
+level = 0
+success = False
+while lives > 0:
 
-running = True
-# Main loop
-while running:
-    screen.fill([255, 255, 255])
-    screen.blit(bg.image, bg.rect)
-    # Look at every event in the queue
-    for event in pygame.event.get():
+    #floor = []
+    #wall = []
+    file = open('levels.txt')
+    spoint = generate_level(file,level)
+    rocket = gameobjects.Rocket(spoint)
+    all_sprites.add(rocket)
+    bg = gameobjects.Background("background.png", [0,0])
+    
+    running = True
+    # Main loop
+    while running:
+        
+        
+        screen.fill([255, 255, 255])
+        screen.blit(bg.image, bg.rect)
+        # Look at every event in the queue
+        for event in pygame.event.get():
+                    
+            # Did the user click the window close button? If so, stop the loop.
+            if event.type == QUIT:
+                running = False
                 
-        # Did the user click the window close button? If so, stop the loop.
-        if event.type == QUIT:
-            running = False
+     
             
- 
-        
-    # Fill the screen with white
-   # screen.fill((135, 206, 250)) 
-
-    pressed_keys = pygame.key.get_pressed()
-    #player.update(pressed_keys)
-    rocket.update(pressed_keys)
+        # Fill the screen with white
+       # screen.fill((135, 206, 250)) 
     
-    if rocket.crashed == True:
-        running = False
-
+        pressed_keys = pygame.key.get_pressed()
+        #player.update(pressed_keys)
+        rocket.update(pressed_keys)
         
-        
-        
-    if pygame.sprite.spritecollideany(rocket, goals):
-        if rocket.spd_vect[1] > 4:
-            rocket.crashed = True
-        else:
-            print("Success")
-    if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
-        rocket.spd_vect[1] = 0
-    if pygame.sprite.spritecollideany(rocket, leftwall) and rocket.spd_vect[0] < 0:
-        rocket.spd_vect[0] = 0
-    if pygame.sprite.spritecollideany(rocket, rightwall) and rocket.spd_vect[0] > 0:
-        rocket.spd_vect[0] = 0
-        rocket.spd = physics.update_speed(rocket.spd_vect, rocket.acc)
-    if pygame.sprite.spritecollideany(rocket, ceiling) and rocket.spd_vect[1] < 0:
-        rocket.spd_vect[1] = 0
+        if rocket.crashed == True:
+            running = False
     
-
-   # Draw the player on the screen
-    for entity in all_sprites:
-        screen.blit(entity.surf, entity.rect)
+            
+            
+            
+        if pygame.sprite.spritecollideany(rocket, goals):
+            if rocket.spd_vect[1] > 4:
+                rocket.crashed = True
+            else:
+                print("Success")
+                running=False
+                success = True
+        if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
+            rocket.spd_vect[1] = 0
+        if pygame.sprite.spritecollideany(rocket, leftwall) and rocket.spd_vect[0] < 0:
+            rocket.spd_vect[0] = 0
+        if pygame.sprite.spritecollideany(rocket, rightwall) and rocket.spd_vect[0] > 0:
+            rocket.spd_vect[0] = 0
+            rocket.spd = physics.update_speed(rocket.spd_vect, rocket.acc)
+        if pygame.sprite.spritecollideany(rocket, ceiling) and rocket.spd_vect[1] < 0:
+            rocket.spd_vect[1] = 0
         
-   
-    # If so, then remove the player and stop the loop
-     #   ball.spdx = -ball.spdx
-        #running = False
-   # for pallo in balls:
-      #  if pallo.inthegame == False:
-       #     running = False
-    pygame.display.flip()
-    # Ensure program maintains a rate of 30 frames per second
-    clock.tick(30)
+    
+       # Draw the player on the screen
+        for entity in all_sprites:
+            screen.blit(entity.surf, entity.rect)
+            
+       
+        # If so, then remove the player and stop the loop
+         #   ball.spdx = -ball.spdx
+            #running = False
+       # for pallo in balls:
+          #  if pallo.inthegame == False:
+           #     running = False
+        pygame.display.flip()
+        # Ensure program maintains a rate of 30 frames per second
+        clock.tick(30)
+    if success == True:
+        level+=1
+        for sps in all_sprites:
+            sps.kill()
+    else:
+        lives -= 1
+        rocket.kill()
+    print (lives)
 
           
 pygame.quit()
