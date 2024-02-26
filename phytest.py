@@ -4,7 +4,7 @@ Created on Fri Feb  2 16:52:10 2024
 
 @author: Mikko
 """
-
+# Comment here to indicate that we are in new branch
 
 # Import the pygame module
 import pygame
