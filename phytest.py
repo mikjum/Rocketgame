@@ -105,6 +105,7 @@ goals.add(goal)
 lives = 3
 level = 0
 success = False
+endgame = False
 while lives > 0:
 
     #floor = []
@@ -128,6 +129,7 @@ while lives > 0:
             # Did the user click the window close button? If so, stop the loop.
             if event.type == QUIT:
                 running = False
+                lives = 0
                 
      
             
@@ -145,8 +147,9 @@ while lives > 0:
             
             
         if pygame.sprite.spritecollideany(rocket, goals):
-            if rocket.spd_vect[1] > 4:
-                rocket.crashed = True
+            if rocket.spd_vect[1] > 3:
+                succes = False
+                print ("Crashed")
             else:
                 print("Success")
                 running=False
