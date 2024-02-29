@@ -56,22 +56,27 @@ def generate_level(file, levelnumber):
             if marker == 'C':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 ceiling.add(tile)
+                walls.add(tile)
                 all_sprites.add(tile)
             if marker == 'L':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 leftwall.add(tile)
+                walls.add(tile)
                 all_sprites.add(tile)
             if marker == 'R':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 rightwall.add(tile)
+                walls.add(tile)
                 all_sprites.add(tile)
             if marker == 'F':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 floors.add(tile)
+                walls.add(tile)
                 all_sprites.add(tile)
             if marker == 'G':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 floors.add(tile)
+                walls.add(tile)
                 goals.add(tile)
                 all_sprites.add(tile)
             if marker == 'S':
@@ -84,28 +89,43 @@ def generate_level(file, levelnumber):
 
 
 goal = gameobjects.Goal((800, 675))
-#player = Player()
+
 
 all_sprites = pygame.sprite.Group()
-#balls = pygame.sprite.Group()
-#players = pygame.sprite.Group()
+
 leftwall = pygame.sprite.Group()
 rightwall = pygame.sprite.Group()
 floors = pygame.sprite.Group()
 ceiling = pygame.sprite.Group()
 goals = pygame.sprite.Group()
-#balls.add(rocket)
-#players.add(player)
+walls = pygame.sprite.Group()
+
 all_sprites.add(goal)
 
 floors.add(goal)
 goals.add(goal)
-#all_sprites.add(player)
+
 
 lives = 3
 level = 0
 success = False
 endgame = False
+
+
+# Function to detect collision edge
+def detect_collision_edge(sprite_a, sprite_b):
+    overlap_x = min(sprite_a.rect.right, sprite_b.rect.right) - max(sprite_a.rect.left, sprite_b.rect.left)
+    overlap_y = min(sprite_a.rect.bottom, sprite_b.rect.bottom) - max(sprite_a.rect.top, sprite_b.rect.top)
+
+    if overlap_x < overlap_y:
+        return "horizontal" if sprite_a.rect.centerx < sprite_b.rect.centerx else "horizontal_reverse"
+    else:
+        return "vertical" if sprite_a.rect.centery < sprite_b.rect.centery else "vertical_reverse"
+    
+
+
+#END of edgecollision
+
 while lives > 0:
 
     #floor = []
@@ -146,15 +166,19 @@ while lives > 0:
             
             
             
-        if pygame.sprite.spritecollideany(rocket, goals):
-            if rocket.spd_vect[1] > 3:
+        if pygame.sprite.spritecollideany(rocket, walls):
+            if rocket.spd_vect[1] > 4:
                 succes = False
-                print ("Crashed")
+                running = False
+               
             else:
-                print("Success")
+               
                 running=False
                 success = True
+                
+        
         if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
+    
             rocket.spd_vect[1] = 0
         if pygame.sprite.spritecollideany(rocket, leftwall) and rocket.spd_vect[0] < 0:
             rocket.spd_vect[0] = 0
@@ -184,6 +208,7 @@ while lives > 0:
         for sps in all_sprites:
             sps.kill()
     else:
+        
         lives -= 1
         rocket.kill()
     print (lives)
