@@ -25,3 +25,15 @@ def introduce_friction(speed, friction):
     direction_angle = math.degrees(math.atan2(speed[1], speed[0]))
     friction_angle = direction_angle - 180
     return direction_angle, friction_angle
+
+
+def check_edge(sprite_a, sprite_b):
+    overlap_x = min(sprite_a.rect.right, sprite_b.rect.right) - max(sprite_a.rect.left, sprite_b.rect.left)
+    overlap_y = min(sprite_a.rect.bottom, sprite_b.rect.bottom) - max(sprite_a.rect.top, sprite_b.rect.top)
+
+    if overlap_x < overlap_y:
+        return "horizontal" if sprite_a.rect.centerx < sprite_b.rect.centerx else "horizontal_reverse"
+    else:
+        return "vertical" if sprite_a.rect.centery < sprite_b.rect.centery else "vertical_reverse"
+
+

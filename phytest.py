@@ -114,13 +114,41 @@ endgame = False
 
 # Function to detect collision edge
 def detect_collision_edge(sprite_a, sprite_b):
-    overlap_x = min(sprite_a.rect.right, sprite_b.rect.right) - max(sprite_a.rect.left, sprite_b.rect.left)
-    overlap_y = min(sprite_a.rect.bottom, sprite_b.rect.bottom) - max(sprite_a.rect.top, sprite_b.rect.top)
+    # print ("right -left", sprite_a.rect.right - sprite_b.rect.left)
+    # print ("right -top", sprite_a.rect.right - sprite_b.rect.top)
+    # print ("right -right", sprite_a.rect.right - sprite_b.rect.right)
+    # print ("right -bottom", sprite_a.rect.right - sprite_b.rect.bottom)
+   
+    # print ("bottom -left", sprite_a.rect.bottom - sprite_b.rect.left)
+    # print ("bottom -top", sprite_a.rect.bottom - sprite_b.rect.top)
+    # print ("bottom -right", sprite_a.rect.bottom - sprite_b.rect.right)
+    # print ("bottom -bottom", sprite_a.rect.bottom - sprite_b.rect.bottom) 
 
-    if overlap_x < overlap_y:
-        return "horizontal" if sprite_a.rect.centerx < sprite_b.rect.centerx else "horizontal_reverse"
-    else:
-        return "vertical" if sprite_a.rect.centery < sprite_b.rect.centery else "vertical_reverse"
+    # print ("left -left", sprite_a.rect.left - sprite_b.rect.left)
+    # print ("left -top", sprite_a.rect.left - sprite_b.rect.top)
+    # print ("left -right", sprite_a.rect.left - sprite_b.rect.right)
+    # print ("left -bottom", sprite_a.rect.left - sprite_b.rect.bottom) 
+    
+    # print ("top -left", sprite_a.rect.top - sprite_b.rect.left)
+    # print ("top -top", sprite_a.rect.top - sprite_b.rect.top)
+    # print ("top -right", sprite_a.rect.top - sprite_b.rect.right)
+    # print ("top -bottom", sprite_a.rect.top - sprite_b.rect.bottom) 
+    distance_to_top = min(abs(sprite_a.rect.right - sprite_b.rect.top), abs(sprite_a.rect.bottom - sprite_b.rect.top), abs(sprite_a.rect.left - sprite_b.rect.top), abs(sprite_a.rect.top - sprite_b.rect.top))
+    distance_to_right = min(abs(sprite_a.rect.right - sprite_b.rect.right), abs(sprite_a.rect.bottom - sprite_b.rect.right), abs(sprite_a.rect.left - sprite_b.rect.right), abs(sprite_a.rect.top - sprite_b.rect.right))
+    distance_to_bottom = min(abs(sprite_a.rect.right - sprite_b.rect.bottom), abs(sprite_a.rect.bottom - sprite_b.rect.bottom), abs(sprite_a.rect.left - sprite_b.rect.bottom), abs(sprite_a.rect.top - sprite_b.rect.bottom))
+    distance_to_left = min(abs(sprite_a.rect.right - sprite_b.rect.left), abs(sprite_a.rect.bottom - sprite_b.rect.left), abs(sprite_a.rect.left - sprite_b.rect.left), abs(sprite_a.rect.top - sprite_b.rect.left))
+    
+    
+    
+    print ("Distance to top ", distance_to_top)
+    print ("Distance to right ", distance_to_right)
+    print ("Distance to bottom ", distance_to_bottom)
+    print ("Distance to left ", distance_to_left)
+    
+    
+       
+      
+    
     
 
 
@@ -135,7 +163,6 @@ while lives > 0:
     rocket = gameobjects.Rocket(spoint)
     all_sprites.add(rocket)
     bg = gameobjects.Background("background.png", [0,0])
-    
     running = True
     # Main loop
     while running:
@@ -166,8 +193,8 @@ while lives > 0:
             
             
             
-        if pygame.sprite.spritecollideany(rocket, walls):
-            if rocket.spd_vect[1] > 4:
+        if pygame.sprite.spritecollideany(rocket, goals):
+            if rocket.spd_vect[1] > 3:
                 succes = False
                 running = False
                
@@ -176,6 +203,10 @@ while lives > 0:
                 running=False
                 success = True
                 
+        
+        collided_wall = pygame.sprite.spritecollideany(rocket, walls)   
+        if collided_wall:
+            print (detect_collision_edge(rocket, collided_wall))
         
         if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
     
