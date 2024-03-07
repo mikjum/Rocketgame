@@ -22,6 +22,16 @@ from pygame.locals import (
 
 
 
+#Invisible sprite to top of all tiles to indicate collsion from top
+class TileEdge(pygame.sprite.Sprite):
+    def __init__(self, left, top, width, height):
+        super(TileEdge, self).__init__()
+        self.rect = pygame.Rect(left, top, width, height)
+       # self.rect.centerpoint = centerpoint
+    
+
+
+
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  #call Sprite initializer

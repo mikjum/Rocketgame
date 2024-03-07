@@ -53,27 +53,23 @@ def generate_level(file, levelnumber):
         xlocation = 25
         for marker in line:
             
-            if marker == 'C':
+            if marker == 'C' or marker == 'L' or marker == 'R' or marker == 'F' or marker == 'G':
                 tile = gameobjects.Wall((xlocation, ylocation))
-                ceiling.add(tile)
+                tilebottom = gameobjects.TileEdge(xlocation-20, ylocation+25, 40, 3)
+                ceiling.add(tilebottom)
+                tileright = gameobjects.TileEdge(xlocation+25, ylocation-20, 3, 40)
+                leftwall.add(tileright)
+                tileleft = gameobjects.TileEdge(xlocation-25, ylocation-20, 3, 40)
+                rightwall.add(tileleft)
+                tiletop = gameobjects.TileEdge(xlocation-20, ylocation-25, 40, 3)
+                floors.add(tiletop)
+                walls.add(tile)
                 all_sprites.add(tile)
-            if marker == 'L':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                leftwall.add(tile)
-                all_sprites.add(tile)
-            if marker == 'R':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                rightwall.add(tile)
-                all_sprites.add(tile)
-            if marker == 'F':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                floors.add(tile)
-                all_sprites.add(tile)
+ 
             if marker == 'G':
                 tile = gameobjects.Wall((xlocation, ylocation))
-                floors.add(tile)
                 goals.add(tile)
-                all_sprites.add(tile)
+ 
             if marker == 'S':
                 startingpoint = (xlocation, ylocation-50)
             xlocation += 50
@@ -84,28 +80,71 @@ def generate_level(file, levelnumber):
 
 
 goal = gameobjects.Goal((800, 675))
-#player = Player()
+
 
 all_sprites = pygame.sprite.Group()
-#balls = pygame.sprite.Group()
-#players = pygame.sprite.Group()
+
 leftwall = pygame.sprite.Group()
 rightwall = pygame.sprite.Group()
 floors = pygame.sprite.Group()
 ceiling = pygame.sprite.Group()
 goals = pygame.sprite.Group()
-#balls.add(rocket)
-#players.add(player)
+walls = pygame.sprite.Group()
+
 all_sprites.add(goal)
 
 floors.add(goal)
 goals.add(goal)
-#all_sprites.add(player)
+
 
 lives = 3
 level = 0
 success = False
 endgame = False
+
+
+# Function to detect collision edge
+def detect_collision_edge(sprite_a, sprite_b):
+    # print ("right -left", sprite_a.rect.right - sprite_b.rect.left)
+    # print ("right -top", sprite_a.rect.right - sprite_b.rect.top)
+    # print ("right -right", sprite_a.rect.right - sprite_b.rect.right)
+    # print ("right -bottom", sprite_a.rect.right - sprite_b.rect.bottom)
+   
+    # print ("bottom -left", sprite_a.rect.bottom - sprite_b.rect.left)
+    # print ("bottom -top", sprite_a.rect.bottom - sprite_b.rect.top)
+    # print ("bottom -right", sprite_a.rect.bottom - sprite_b.rect.right)
+    # print ("bottom -bottom", sprite_a.rect.bottom - sprite_b.rect.bottom) 
+
+    # print ("left -left", sprite_a.rect.left - sprite_b.rect.left)
+    # print ("left -top", sprite_a.rect.left - sprite_b.rect.top)
+    # print ("left -right", sprite_a.rect.left - sprite_b.rect.right)
+    # print ("left -bottom", sprite_a.rect.left - sprite_b.rect.bottom) 
+    
+    # print ("top -left", sprite_a.rect.top - sprite_b.rect.left)
+    # print ("top -top", sprite_a.rect.top - sprite_b.rect.top)
+    # print ("top -right", sprite_a.rect.top - sprite_b.rect.right)
+    # print ("top -bottom", sprite_a.rect.top - sprite_b.rect.bottom) 
+    distance_to_top = min(abs(sprite_a.rect.right - sprite_b.rect.top), abs(sprite_a.rect.bottom - sprite_b.rect.top), abs(sprite_a.rect.left - sprite_b.rect.top), abs(sprite_a.rect.top - sprite_b.rect.top))
+    distance_to_right = min(abs(sprite_a.rect.right - sprite_b.rect.right), abs(sprite_a.rect.bottom - sprite_b.rect.right), abs(sprite_a.rect.left - sprite_b.rect.right), abs(sprite_a.rect.top - sprite_b.rect.right))
+    distance_to_bottom = min(abs(sprite_a.rect.right - sprite_b.rect.bottom), abs(sprite_a.rect.bottom - sprite_b.rect.bottom), abs(sprite_a.rect.left - sprite_b.rect.bottom), abs(sprite_a.rect.top - sprite_b.rect.bottom))
+    distance_to_left = min(abs(sprite_a.rect.right - sprite_b.rect.left), abs(sprite_a.rect.bottom - sprite_b.rect.left), abs(sprite_a.rect.left - sprite_b.rect.left), abs(sprite_a.rect.top - sprite_b.rect.left))
+    
+    
+    
+    print ("Distance to top ", distance_to_top)
+    print ("Distance to right ", distance_to_right)
+    print ("Distance to bottom ", distance_to_bottom)
+    print ("Distance to left ", distance_to_left)
+    
+    
+       
+      
+    
+    
+
+
+#END of edgecollision
+
 while lives > 0:
 
     #floor = []
@@ -115,7 +154,6 @@ while lives > 0:
     rocket = gameobjects.Rocket(spoint)
     all_sprites.add(rocket)
     bg = gameobjects.Background("background.png", [0,0])
-    
     running = True
     # Main loop
     while running:
@@ -149,12 +187,21 @@ while lives > 0:
         if pygame.sprite.spritecollideany(rocket, goals):
             if rocket.spd_vect[1] > 3:
                 succes = False
-                print ("Crashed")
+                running = False
+               
             else:
-                print("Success")
+               
                 running=False
                 success = True
+                
+        
+        collided_wall = pygame.sprite.spritecollideany(rocket, floors)   
+        if collided_wall:
+            pass
+           # print (detect_collision_edge(rocket, collided_wall))
+        
         if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
+            
             rocket.spd_vect[1] = 0
         if pygame.sprite.spritecollideany(rocket, leftwall) and rocket.spd_vect[0] < 0:
             rocket.spd_vect[0] = 0
@@ -184,6 +231,7 @@ while lives > 0:
         for sps in all_sprites:
             sps.kill()
     else:
+        
         lives -= 1
         rocket.kill()
     print (lives)
