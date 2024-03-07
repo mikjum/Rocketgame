@@ -12,6 +12,7 @@ import random
 import math
 import gameobjects
 import physics
+import pyautogui
 
 # Initialize pygame
 pygame.init()
@@ -35,6 +36,7 @@ from pygame.locals import (
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 750
 
+font = pygame.font.Font('freesansbold.ttf', 32)
 
 
 # Create the screen object
@@ -105,41 +107,7 @@ endgame = False
 
 # Function to detect collision edge
 def detect_collision_edge(sprite_a, sprite_b):
-    # print ("right -left", sprite_a.rect.right - sprite_b.rect.left)
-    # print ("right -top", sprite_a.rect.right - sprite_b.rect.top)
-    # print ("right -right", sprite_a.rect.right - sprite_b.rect.right)
-    # print ("right -bottom", sprite_a.rect.right - sprite_b.rect.bottom)
-   
-    # print ("bottom -left", sprite_a.rect.bottom - sprite_b.rect.left)
-    # print ("bottom -top", sprite_a.rect.bottom - sprite_b.rect.top)
-    # print ("bottom -right", sprite_a.rect.bottom - sprite_b.rect.right)
-    # print ("bottom -bottom", sprite_a.rect.bottom - sprite_b.rect.bottom) 
-
-    # print ("left -left", sprite_a.rect.left - sprite_b.rect.left)
-    # print ("left -top", sprite_a.rect.left - sprite_b.rect.top)
-    # print ("left -right", sprite_a.rect.left - sprite_b.rect.right)
-    # print ("left -bottom", sprite_a.rect.left - sprite_b.rect.bottom) 
-    
-    # print ("top -left", sprite_a.rect.top - sprite_b.rect.left)
-    # print ("top -top", sprite_a.rect.top - sprite_b.rect.top)
-    # print ("top -right", sprite_a.rect.top - sprite_b.rect.right)
-    # print ("top -bottom", sprite_a.rect.top - sprite_b.rect.bottom) 
-    distance_to_top = min(abs(sprite_a.rect.right - sprite_b.rect.top), abs(sprite_a.rect.bottom - sprite_b.rect.top), abs(sprite_a.rect.left - sprite_b.rect.top), abs(sprite_a.rect.top - sprite_b.rect.top))
-    distance_to_right = min(abs(sprite_a.rect.right - sprite_b.rect.right), abs(sprite_a.rect.bottom - sprite_b.rect.right), abs(sprite_a.rect.left - sprite_b.rect.right), abs(sprite_a.rect.top - sprite_b.rect.right))
-    distance_to_bottom = min(abs(sprite_a.rect.right - sprite_b.rect.bottom), abs(sprite_a.rect.bottom - sprite_b.rect.bottom), abs(sprite_a.rect.left - sprite_b.rect.bottom), abs(sprite_a.rect.top - sprite_b.rect.bottom))
-    distance_to_left = min(abs(sprite_a.rect.right - sprite_b.rect.left), abs(sprite_a.rect.bottom - sprite_b.rect.left), abs(sprite_a.rect.left - sprite_b.rect.left), abs(sprite_a.rect.top - sprite_b.rect.left))
-    
-    
-    
-    print ("Distance to top ", distance_to_top)
-    print ("Distance to right ", distance_to_right)
-    print ("Distance to bottom ", distance_to_bottom)
-    print ("Distance to left ", distance_to_left)
-    
-    
-       
-      
-    
+   pass
     
 
 
@@ -157,6 +125,12 @@ while lives > 0:
     running = True
     # Main loop
     while running:
+        textstr = "Rockets: " + str(lives) + "  Level: " + str(level)
+        print(textstr)
+        text = font.render(textstr, True, (0,255,0))
+        textRect = text.get_rect()
+        textRect.center = (160, 25)
+        
         
         
         screen.fill([255, 255, 255])
@@ -215,7 +189,7 @@ while lives > 0:
        # Draw the player on the screen
         for entity in all_sprites:
             screen.blit(entity.surf, entity.rect)
-            
+        screen.blit(text, textRect)   
        
         # If so, then remove the player and stop the loop
          #   ball.spdx = -ball.spdx
@@ -227,6 +201,7 @@ while lives > 0:
         # Ensure program maintains a rate of 30 frames per second
         clock.tick(30)
     if success == True:
+        pyautogui.alert("Congratulations! You managed to get next level")
         level+=1
         for sps in all_sprites:
             sps.kill()
@@ -234,6 +209,7 @@ while lives > 0:
         
         lives -= 1
         rocket.kill()
+        pyautogui.alert("Your Rocket destroyed!")
     print (lives)
 
           
