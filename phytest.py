@@ -53,32 +53,23 @@ def generate_level(file, levelnumber):
         xlocation = 25
         for marker in line:
             
-            if marker == 'C':
+            if marker == 'C' or marker == 'L' or marker == 'R' or marker == 'F' or marker == 'G':
                 tile = gameobjects.Wall((xlocation, ylocation))
-                ceiling.add(tile)
+                tilebottom = gameobjects.TileEdge(xlocation-20, ylocation+25, 40, 3)
+                ceiling.add(tilebottom)
+                tileright = gameobjects.TileEdge(xlocation+25, ylocation-20, 3, 40)
+                leftwall.add(tileright)
+                tileleft = gameobjects.TileEdge(xlocation-25, ylocation-20, 3, 40)
+                rightwall.add(tileleft)
+                tiletop = gameobjects.TileEdge(xlocation-20, ylocation-25, 40, 3)
+                floors.add(tiletop)
                 walls.add(tile)
                 all_sprites.add(tile)
-            if marker == 'L':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                leftwall.add(tile)
-                walls.add(tile)
-                all_sprites.add(tile)
-            if marker == 'R':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                rightwall.add(tile)
-                walls.add(tile)
-                all_sprites.add(tile)
-            if marker == 'F':
-                tile = gameobjects.Wall((xlocation, ylocation))
-                floors.add(tile)
-                walls.add(tile)
-                all_sprites.add(tile)
+ 
             if marker == 'G':
                 tile = gameobjects.Wall((xlocation, ylocation))
-                floors.add(tile)
-                walls.add(tile)
                 goals.add(tile)
-                all_sprites.add(tile)
+ 
             if marker == 'S':
                 startingpoint = (xlocation, ylocation-50)
             xlocation += 50
@@ -204,12 +195,13 @@ while lives > 0:
                 success = True
                 
         
-        collided_wall = pygame.sprite.spritecollideany(rocket, walls)   
+        collided_wall = pygame.sprite.spritecollideany(rocket, floors)   
         if collided_wall:
-            print (detect_collision_edge(rocket, collided_wall))
+            pass
+           # print (detect_collision_edge(rocket, collided_wall))
         
         if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
-    
+            
             rocket.spd_vect[1] = 0
         if pygame.sprite.spritecollideany(rocket, leftwall) and rocket.spd_vect[0] < 0:
             rocket.spd_vect[0] = 0

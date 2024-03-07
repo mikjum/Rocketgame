@@ -29,13 +29,13 @@ L       RL         R
 L   S   RL   GGGG  R
 FFFFFFFFFFFFFFFFFFFF
 CCCCCCCCCCCCCCCCCCCC
-L    RL            R
-L    RL            R
-L    RL            R
-L    RL            R
-L    CC            R
-L                  R
-L                  R
+L      L           R
+L      L           R
+L      L           R
+L      L           R
+L      L           R
+L      L           R
+L      L           R
 L                  R
 L                  R
 L       FF         R
@@ -43,3 +43,4 @@ L       RL         R
 L       RL         R
 L   S   RL   GGGG  R
 FFFFFFFFFFFFFFFFFFFF
+
