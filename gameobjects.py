@@ -144,7 +144,10 @@ class Rocket(pygame.sprite.Sprite):
         if self.rot != 0:
             self.angle += self.rot
             self.rotate(self.angle)
-        
+            if self.angle > 360:
+                self.angle -= 360
+            if self.angle < 0:
+                self.angle += 360
 
         #Update object location
         self.rect.move_ip(self.spd_vect)

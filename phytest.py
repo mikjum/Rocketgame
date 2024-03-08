@@ -13,6 +13,7 @@ import math
 import gameobjects
 import physics
 import pyautogui
+import splashscreen
 
 # Initialize pygame
 pygame.init()
@@ -111,7 +112,52 @@ def detect_collision_edge(sprite_a, sprite_b):
     
 
 
-#END of edgecollision
+
+started = False
+bg = gameobjects.Background("backgroundold.png", [0,0])
+
+textstr = "Welcome to Rocket Game!"
+
+text = font.render(textstr, True, (0,255,0))
+textRect = text.get_rect()
+textRect.center = (500, 350)
+
+
+helptext = "Use Arrow keys to play. Land rocket slowly and straight"
+helpbox = font.render(helptext, True, (255,255,255))
+helpRect = helpbox.get_rect()
+helpRect.center = (500, 600)
+
+
+button_surface = pygame.Surface((200, 50))
+buttontext = font.render("Start Game", True, (255, 0, 0))
+text_rect = buttontext.get_rect(center=(button_surface.get_width()/2, button_surface.get_height()/2))
+
+button_rect = pygame.Rect(400, 400, 200, 50)
+
+
+while started==False: 
+    clock.tick(60)
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        # Call the on_mouse_button_down() function
+            if button_rect.collidepoint(event.pos):
+                
+                started = True
+        if event.type == QUIT:
+            pygame.quit()
+           
+    # Shwo the button text
+    button_surface.blit(buttontext, text_rect)
+
+      # Draw the button on the screen
+    screen.blit(button_surface, (button_rect.x, button_rect.y))
+
+      # Update the game state
+    pygame.display.update()
+    screen.blit(bg.image, bg.rect)
+    screen.blit(text, textRect)  
+    screen.blit(helpbox, helpRect)
 
 while lives > 0:
 
@@ -140,8 +186,7 @@ while lives > 0:
                     
             # Did the user click the window close button? If so, stop the loop.
             if event.type == QUIT:
-                running = False
-                lives = 0
+                pygame.quit()
                 
      
             
@@ -159,9 +204,12 @@ while lives > 0:
             
             
         if pygame.sprite.spritecollideany(rocket, goals):
-            if rocket.spd_vect[1] > 3:
+            if rocket.spd_vect[1] > 4:
                 succes = False
                 running = False
+            elif rocket.angle > 10 and rocket.angle < 350:
+                running = False
+                success = False
                
             else:
                
