@@ -20,7 +20,7 @@ from pygame.locals import (
     QUIT
 )
 
-
+explosion_images = [pygame.image.load(f'rocket{i}.png') for i in range(3, 13)]
 
 #Invisible sprite to top of all tiles to indicate collsion from top
 class TileEdge(pygame.sprite.Sprite):
@@ -79,7 +79,8 @@ class Rocket(pygame.sprite.Sprite):
         self.acc = [0, 0]  #Kokonaiskiihtyvyys
         self.angle = 0
         self.rot = 0
-    
+        self.explode = False
+        self.explosionIndex = 0
     
         self.inthegame = True
 
@@ -108,10 +109,19 @@ class Rocket(pygame.sprite.Sprite):
         return spdx, spdy
     
         
-        
+    def explosion(self):
+        self.explode = True
         
     # Update function for the object.
     def update(self, pressed_keys):
+        if self.explode == True:
+            self.surf=explosion_images[self.explosionIndex].convert()
+            self.explosionIndex += 1
+            self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+            if self.explosionIndex == len(explosion_images):
+                self.explosionIndex = 0
+                self.crashed = True
+        
         # setting the forces according to the user commands
         pressed = False
         if pressed_keys[K_LEFT]:
@@ -151,4 +161,4 @@ class Rocket(pygame.sprite.Sprite):
 
         #Update object location
         self.rect.move_ip(self.spd_vect)
-       
+        

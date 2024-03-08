@@ -43,4 +43,34 @@ L       RL         R
 L       RL         R
 L   S   RL   GGGG  R
 FFFFFFFFFFFFFFFFFFFF
+CCCCCCCCCCCCCCCCCCCC
+L      LRRRRRRRRRRRR
+L      LRRRRRRRRRRRR
+L      L           R
+L      L           R
+L      L           R
+L      LGGGG       R
+L                  R
+L                  R
+L                  R
+L       FF         R
+L       RL         R
+L       RL         R
+L   S   RL         R
+FFFFFFFFFFFFFFFFFFFF
+CCCCCCCCCCCCCCCCCCCC
+L         CC       R
+L         CC       R
+L                  R
+LGGGGL     RR      R
+LLLLLL     R       R
+L         RRRRRRRRRR
+L                  R
+LLLLL              R
+L           RR     R
+L            RR    R
+L             RRRRRR
+L  FFFFF           R
+L  FFFFFFFF   S    R
+FFFFFFFFFFFFFFFFFFFF
 

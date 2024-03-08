@@ -13,7 +13,7 @@ import math
 import gameobjects
 import physics
 import pyautogui
-import splashscreen
+
 
 # Initialize pygame
 pygame.init()
@@ -82,7 +82,7 @@ def generate_level(file, levelnumber):
 
 
 
-goal = gameobjects.Goal((800, 675))
+#goal = gameobjects.Goal((800, 675))
 
 
 all_sprites = pygame.sprite.Group()
@@ -94,14 +94,14 @@ ceiling = pygame.sprite.Group()
 goals = pygame.sprite.Group()
 walls = pygame.sprite.Group()
 
-all_sprites.add(goal)
+#all_sprites.add(goal)
 
-floors.add(goal)
-goals.add(goal)
+#floors.add(goal)
+#goals.add(goal)
 
 
 lives = 3
-level = 0
+level = 4
 success = False
 endgame = False
 
@@ -197,26 +197,30 @@ while lives > 0:
         #player.update(pressed_keys)
         rocket.update(pressed_keys)
         
-        if rocket.crashed == True:
-            running = False
+        # if rocket.crashed == True:
+        #     running = False
     
             
             
             
         if pygame.sprite.spritecollideany(rocket, goals):
             if rocket.spd_vect[1] > 4:
-                succes = False
-                running = False
+                rocket.explosion()
+                # succes = False
+                # running = False
             elif rocket.angle > 10 and rocket.angle < 350:
                 running = False
                 success = False
                
             else:
-               
-                running=False
-                success = True
+                if rocket.explode == False:
+                    print("tääwwä")
+                    running=False
+                    success = True
                 
-        
+        if rocket.crashed == True:
+            running =False
+            success = False
         collided_wall = pygame.sprite.spritecollideany(rocket, floors)   
         if collided_wall:
             pass
