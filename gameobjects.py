@@ -52,8 +52,9 @@ class Wall(pygame.sprite.Sprite):
 class Goal(pygame.sprite.Sprite):
     def __init__(self, centerpoint):
         super(Goal, self).__init__()
-        self.surf = pygame.Surface((200,50))
-        self.surf.fill((255,255,255))
+        self.surf = pygame.image.load("landingpad2.png").convert()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+   
         self.rect = self.surf.get_rect(center = centerpoint)
         
         
@@ -118,6 +119,7 @@ class Rocket(pygame.sprite.Sprite):
             self.surf=explosion_images[self.explosionIndex].convert()
             self.explosionIndex += 1
             self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+            
             if self.explosionIndex == len(explosion_images):
                 self.explosionIndex = 0
                 self.crashed = True

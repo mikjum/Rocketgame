@@ -56,7 +56,7 @@ def generate_level(file, levelnumber):
         xlocation = 25
         for marker in line:
             
-            if marker == 'C' or marker == 'L' or marker == 'R' or marker == 'F' or marker == 'G':
+            if marker == 'C' or marker == 'L' or marker == 'R' or marker == 'F':
                 tile = gameobjects.Wall((xlocation, ylocation))
                 tilebottom = gameobjects.TileEdge(xlocation-20, ylocation+25, 40, 3)
                 ceiling.add(tilebottom)
@@ -70,7 +70,10 @@ def generate_level(file, levelnumber):
                 all_sprites.add(tile)
  
             if marker == 'G':
-                tile = gameobjects.Wall((xlocation, ylocation))
+           
+            
+                tile = gameobjects.Goal((xlocation+75, ylocation))
+                all_sprites.add(tile)
                 goals.add(tile)
  
             if marker == 'S':
@@ -101,7 +104,7 @@ walls = pygame.sprite.Group()
 
 
 lives = 3
-level = 4
+level = 1
 success = False
 endgame = False
 
