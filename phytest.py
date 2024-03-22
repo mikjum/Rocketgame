@@ -69,12 +69,12 @@ def generate_level(file, levelnumber):
                 walls.add(tile)
                 all_sprites.add(tile)
  
-            if marker == 'G':
-           
+            if marker == 'G':         
             
                 tile = gameobjects.Goal((xlocation+75, ylocation))
                 all_sprites.add(tile)
                 goals.add(tile)
+                floors.add(tile)
  
             if marker == 'S':
                 startingpoint = (xlocation, ylocation-50)
@@ -104,17 +104,14 @@ walls = pygame.sprite.Group()
 
 
 lives = 3
-level = 1
+level = 0
 success = False
 endgame = False
-
-
-# Function to detect collision edge
-def detect_collision_edge(sprite_a, sprite_b):
-   pass
-    
-
-
+try:
+    file = open('Levels.txt')
+except:
+    pyautogui.alert("Could not open levels.txt")
+    pygame.quit()
 
 started = False
 bg = gameobjects.Background("backgroundold.png", [0,0])
@@ -149,6 +146,7 @@ while started==False:
                 started = True
         if event.type == QUIT:
             pygame.quit()
+            file.close()
            
     # Shwo the button text
     button_surface.blit(buttontext, text_rect)
@@ -166,7 +164,7 @@ while lives > 0:
 
     #floor = []
     #wall = []
-    file = open('levels.txt')
+  
     spoint = generate_level(file,level)
     rocket = gameobjects.Rocket(spoint)
     all_sprites.add(rocket)
@@ -190,6 +188,7 @@ while lives > 0:
             # Did the user click the window close button? If so, stop the loop.
             if event.type == QUIT:
                 pygame.quit()
+                file.close()
                 
      
             

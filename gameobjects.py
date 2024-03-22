@@ -35,9 +35,19 @@ class TileEdge(pygame.sprite.Sprite):
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
-        self.image = pygame.image.load(image_file)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
+        try:
+            self.image = pygame.image.load(image_file)
+            self.rect = self.image.get_rect()
+            self.rect.left, self.rect.top = location
+        except:
+            self.surf = pygame.Surface((1000, 700))
+            self.surf.fill((0, 0, 0))  
+            self.rect = self.surf.get_rect()
+            self.rect.left, self.rect.top = location
+            self.image = self.surf
+            
+        
+        
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, centerpoint):
@@ -64,8 +74,15 @@ class Goal(pygame.sprite.Sprite):
 class Rocket(pygame.sprite.Sprite):
     def __init__(self, startingpoint):
         super(Rocket, self).__init__()
-        self.surf = pygame.image.load("rocket2.png").convert()
-        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        try:
+            self.surf = pygame.image.load("rocket2.png").convert()
+            self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        except:
+            print("Could not open image file rocket2.png")
+       
+            self.surf = pygame.Surface((70, 100))
+            self.surf.fill((255, 255, 255))
+        
         self.originalsurf = self.surf
         self.rect = self.surf.get_rect(center = startingpoint)
         
@@ -89,7 +106,10 @@ class Rocket(pygame.sprite.Sprite):
         self.crashed = False       
         
     def rotate(self, angle):
-        self.surf = pygame.transform.rotate(self.originalsurf, self.angle)
+        print("rotating")
+        if self.explode == False:
+            print("Original")
+            self.surf = pygame.transform.rotate(self.originalsurf, self.angle)
         self.rect = self.surf.get_rect(center = self.rect.center)
        
     def calculate_accelerations(self, angle, thrust, throttle):
@@ -119,7 +139,7 @@ class Rocket(pygame.sprite.Sprite):
             self.surf=explosion_images[self.explosionIndex].convert()
             self.explosionIndex += 1
             self.surf.set_colorkey((255, 255, 255), RLEACCEL)
-            
+            self.rotate(self.angle)
             if self.explosionIndex == len(explosion_images):
                 self.explosionIndex = 0
                 self.crashed = True
