@@ -48,6 +48,7 @@ balls = pygame.sprite.Group()
 
 
 def generate_level(file, levelnumber):
+    print("Generating Level")
     lines = file.readlines()
     level = lines[levelnumber*15 : levelnumber*15 + 15]
     ylocation = 25
@@ -104,14 +105,10 @@ walls = pygame.sprite.Group()
 
 
 lives = 3
-level = 0
+level = 2
 success = False
 endgame = False
-try:
-    file = open('Levels.txt')
-except:
-    pyautogui.alert("Could not open levels.txt")
-    pygame.quit()
+
 
 started = False
 bg = gameobjects.Background("backgroundold.png", [0,0])
@@ -146,7 +143,7 @@ while started==False:
                 started = True
         if event.type == QUIT:
             pygame.quit()
-            file.close()
+         #   file.close()
            
     # Shwo the button text
     button_surface.blit(buttontext, text_rect)
@@ -164,8 +161,14 @@ while lives > 0:
 
     #floor = []
     #wall = []
-  
+    try:
+        file = open('Levels.txt')
+    except:
+        pyautogui.alert("Could not open levels.txt")
+        pygame.quit()
     spoint = generate_level(file,level)
+    file.close()
+    print (spoint)
     rocket = gameobjects.Rocket(spoint)
     all_sprites.add(rocket)
     bg = gameobjects.Background("background.png", [0,0])
@@ -173,7 +176,7 @@ while lives > 0:
     # Main loop
     while running:
         textstr = "Rockets: " + str(lives) + "  Level: " + str(level)
-        print(textstr)
+        #print(textstr)
         text = font.render(textstr, True, (0,255,0))
         textRect = text.get_rect()
         textRect.center = (160, 25)
@@ -188,7 +191,7 @@ while lives > 0:
             # Did the user click the window close button? If so, stop the loop.
             if event.type == QUIT:
                 pygame.quit()
-                file.close()
+               # file.close()
                 
      
             
@@ -205,7 +208,7 @@ while lives > 0:
             
             
             
-        if pygame.sprite.spritecollideany(rocket, goals):
+        if pygame.sprite.spritecollideany(rocket, goals) and rocket.explode == False:
             if rocket.spd_vect[1] > 4:
                 rocket.explosion()
                 # succes = False
@@ -215,10 +218,10 @@ while lives > 0:
                 success = False
                
             else:
-                if rocket.explode == False:
-                    print("tääwwä")
-                    running=False
-                    success = True
+            #    if rocket.explode == False:
+                print("tääwwä")
+                running=False
+                success = True
                 
         if rocket.crashed == True:
             running =False
@@ -254,6 +257,9 @@ while lives > 0:
         pygame.display.flip()
         # Ensure program maintains a rate of 30 frames per second
         clock.tick(30)
+        
+        #END While running
+        
     if success == True:
         pyautogui.alert("Congratulations! You managed to get next level")
         level+=1
