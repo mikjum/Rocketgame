@@ -20,7 +20,7 @@ from pygame.locals import (
     QUIT
 )
 
-explosion_images = [pygame.image.load(f'rocket{i}.png') for i in range(3, 13)]
+explosion_images = [pygame.image.load(f'graphics/rocket{i}.png') for i in range(3, 13)]
 
 #Invisible sprite to top of all tiles to indicate collsion from top
 class TileEdge(pygame.sprite.Sprite):
@@ -52,7 +52,7 @@ class Background(pygame.sprite.Sprite):
 class Wall(pygame.sprite.Sprite):
     def __init__(self, centerpoint):
         super(Wall, self).__init__()
-        self.surf = pygame.image.load("tile.png").convert()
+        self.surf = pygame.image.load("graphics/tile.png").convert()
         #self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         #self.surf = pygame.Surface((50,50))
        #self.surf.fill((255,255,255))
@@ -62,7 +62,7 @@ class Wall(pygame.sprite.Sprite):
 class Goal(pygame.sprite.Sprite):
     def __init__(self, centerpoint):
         super(Goal, self).__init__()
-        self.surf = pygame.image.load("landingpad2.png").convert()
+        self.surf = pygame.image.load("graphics/landingpad2.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
    
         self.rect = self.surf.get_rect(center = centerpoint)
@@ -75,7 +75,7 @@ class Rocket(pygame.sprite.Sprite):
     def __init__(self, startingpoint):
         super(Rocket, self).__init__()
         try:
-            self.surf = pygame.image.load("rocket2.png").convert()
+            self.surf = pygame.image.load("graphics/rocket2.png").convert()
             self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         except:
             print("Could not open image file rocket2.png")

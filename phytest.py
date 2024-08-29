@@ -111,7 +111,7 @@ endgame = False
 
 
 started = False
-bg = gameobjects.Background("backgroundold.png", [0,0])
+bg = gameobjects.Background("graphics/backgroundold.png", [0,0])
 
 textstr = "Welcome to Rocket Game!"
 
@@ -171,7 +171,7 @@ while lives > 0:
     print (spoint)
     rocket = gameobjects.Rocket(spoint)
     all_sprites.add(rocket)
-    bg = gameobjects.Background("background.png", [0,0])
+    bg = gameobjects.Background("graphics/background.png", [0,0])
     running = True
     # Main loop
     while running:
