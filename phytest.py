@@ -105,7 +105,7 @@ walls = pygame.sprite.Group()
 
 
 lives = 3
-level = 2
+level = 1
 success = False
 endgame = False
 
@@ -162,7 +162,7 @@ while lives > 0:
     #floor = []
     #wall = []
     try:
-        file = open('Levels.txt')
+        file = open('files/Levels.txt')
     except:
         pyautogui.alert("Could not open levels.txt")
         pygame.quit()
@@ -219,7 +219,7 @@ while lives > 0:
                
             else:
             #    if rocket.explode == False:
-                print("tääwwä")
+            
                 running=False
                 success = True
                 
