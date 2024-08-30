@@ -127,11 +127,11 @@ class Rocket(pygame.sprite.Sprite):
         pressed = False
         if pressed_keys[K_LEFT]:
             self.thrust = 0.2
-            self.rot = 5
+            self.rot += 0.1
             pressed = True
         if pressed_keys[K_RIGHT]:
             self.thrust = 0.2
-            self.rot = -5
+            self.rot -= 0.1
             pressed = True
         if pressed_keys[K_UP]:
             self.throttle = 0.2
@@ -139,7 +139,7 @@ class Rocket(pygame.sprite.Sprite):
         
         #When no key is pressed, forces shall go zero
         if pressed == False:
-            self.rot = 0
+           # self.rot = 0
             self.throttle = 0
             self.thrust = 0
 
