@@ -36,8 +36,8 @@ all_sprites = pygame.sprite.Group()
 balls = pygame.sprite.Group()
 
 
+#Function to generate level consisting level objects defined in levels-file
 def generate_level(file, levelnumber):
-    print("Generating Level")
     lines = file.readlines()
     level = lines[levelnumber*15 : levelnumber*15 + 15]
     ylocation = 25
@@ -74,10 +74,8 @@ def generate_level(file, levelnumber):
 
 
 
-
-#goal = gameobjects.Goal((800, 675))
-
-
+# Setting up sprite groups
+#Left-right-up-down walls are required workaround to understand how rocket collided
 all_sprites = pygame.sprite.Group()
 
 leftwall = pygame.sprite.Group()
@@ -87,12 +85,9 @@ ceiling = pygame.sprite.Group()
 goals = pygame.sprite.Group()
 walls = pygame.sprite.Group()
 
-#all_sprites.add(goal)
-
-#floors.add(goal)
-#goals.add(goal)
 
 
+#Initial game parameters
 lives = 3
 level = 1
 success = False
@@ -100,28 +95,23 @@ endgame = False
 
 
 started = False
+
+#Splash screen
 bg = gameobjects.Background("graphics/backgroundold.png", [0,0])
-
 textstr = "Welcome to Rocket Game!"
-
 text = font.render(textstr, True, (0,255,0))
 textRect = text.get_rect()
 textRect.center = (500, 350)
-
-
 helptext = "Use Arrow keys to play. Land rocket slowly and straight"
 helpbox = font.render(helptext, True, (255,255,255))
 helpRect = helpbox.get_rect()
 helpRect.center = (500, 600)
-
-
 button_surface = pygame.Surface((200, 50))
 buttontext = font.render("Start Game", True, (255, 0, 0))
 text_rect = buttontext.get_rect(center=(button_surface.get_width()/2, button_surface.get_height()/2))
-
 button_rect = pygame.Rect(400, 400, 200, 50)
 
-
+#Loop polling splash screen to continue and drawing the splash screen
 while started==False: 
     clock.tick(60)
     for event in pygame.event.get():
@@ -146,10 +136,11 @@ while started==False:
     screen.blit(text, textRect)  
     screen.blit(helpbox, helpRect)
 
+
+#Loop run as long as plauer is alive
 while lives > 0:
 
-    #floor = []
-    #wall = []
+
     try:
         file = open('files/Levels.txt')
     except:
@@ -162,10 +153,10 @@ while lives > 0:
     all_sprites.add(rocket)
     bg = gameobjects.Background("graphics/background.png", [0,0])
     running = True
-    # Main loop
+    # Main loop running within current live and current level
     while running:
         textstr = "Rockets: " + str(lives) + "  Level: " + str(level)
-        #print(textstr)
+       
         text = font.render(textstr, True, (0,255,0))
         textRect = text.get_rect()
         textRect.center = (160, 25)
@@ -174,51 +165,46 @@ while lives > 0:
         
         screen.fill([255, 255, 255])
         screen.blit(bg.image, bg.rect)
+        
         # Look at every event in the queue
         for event in pygame.event.get():
-                    
-            # Did the user click the window close button? If so, stop the loop.
+    
+            # Did the user click the window close button? If so, stop the game.
             if event.type == QUIT:
                 pygame.quit()
                # file.close()
-                
-     
-            
-        # Fill the screen with white
-       # screen.fill((135, 206, 250)) 
     
+        # Was there a key pressed?
         pressed_keys = pygame.key.get_pressed()
-        #player.update(pressed_keys)
+
+        #Update the game object and take pressed keys into account
         rocket.update(pressed_keys)
         
-        # if rocket.crashed == True:
-        #     running = False
-    
-            
-            
-            
+        #In case of hitting the goal (If rocket was not already exploded)
         if pygame.sprite.spritecollideany(rocket, goals) and rocket.explode == False:
+            # With too high speed, the rocket will start explosion process
             if rocket.spd_vect[1] > 4:
                 rocket.explosion()
-                # succes = False
-                # running = False
+            # It is also fatal if your rocket was too tilted during the landing    
             elif rocket.angle > 10 and rocket.angle < 350:
                 running = False
                 success = False
-               
+            
+                # Othervice: "GREAT SUCCESS!"
             else:
-            #    if rocket.explode == False:
             
                 running=False
                 success = True
-                
+        # In case of explosion, when the explosion process is done, end the loop        
         if rocket.crashed == True:
             running =False
             success = False
+            
+        #In case of wall collsion, consequences depend on the direction of collision
+        # To Do: More sophisticated collisions (Bouncing, exploding etc)
         collided_wall = pygame.sprite.spritecollideany(rocket, floors)   
-        if collided_wall:
-            pass
-           # print (detect_collision_edge(rocket, collided_wall))
+ 
+ 
         
         if pygame.sprite.spritecollideany(rocket, floors) and rocket.spd_vect[1] > 0:
             
@@ -232,28 +218,25 @@ while lives > 0:
             rocket.spd_vect[1] = 0
         
     
-       # Draw the player on the screen
+       # Draw the items on the screen
         for entity in all_sprites:
             screen.blit(entity.surf, entity.rect)
         screen.blit(text, textRect)   
        
-        # If so, then remove the player and stop the loop
-         #   ball.spdx = -ball.spdx
-            #running = False
-       # for pallo in balls:
-          #  if pallo.inthegame == False:
-           #     running = False
+
         pygame.display.flip()
         # Ensure program maintains a rate of 30 frames per second
         clock.tick(30)
         
         #END While running
-        
+    
+    #When level ws succesfully completed    
     if success == True:
         pyautogui.alert("Congratulations! You managed to get next level")
         level+=1
         for sps in all_sprites:
             sps.kill()
+    #And if it was not so succesfull
     else:
         
         lives -= 1
@@ -261,5 +244,5 @@ while lives > 0:
         pyautogui.alert("Your Rocket destroyed!")
     print (lives)
 
-          
+# when lives == 0            
 pygame.quit()
